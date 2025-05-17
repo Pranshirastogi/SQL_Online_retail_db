@@ -1,148 +1,158 @@
-# 📦 OnlineRetailDB Project – SQL-Based Retail Management System
-## 🧾 Project Overview
-This project simulates a fictional online retail company and demonstrates core database design, data manipulation, query writing, indexing, views, triggers, and role-based access control (RBAC) in MySQL.
 
-## 📚 Contents
-Database Schema
+# 🛒 OnlineRetailDB Project – A Complete SQL Retail Database Simulation
 
-Sample Data Insertion
+## 📌 Project Overview
 
-Analytical Queries
+The **OnlineRetailDB** project is a comprehensive simulation of a **fictional e-commerce company’s database system**, created using **MySQL**. It covers the full spectrum of database development and operations, including:
 
-Performance Optimization (Indexes)
+- Schema design  
+- Data population  
+- Real-world reporting queries  
+- Views and indexing  
+- Trigger-based auditing  
+- Role-based access control (RBAC) for data security
 
-Views
+This project is ideal for learning, interviews, academic submissions, or demonstrations of SQL skills in real-world scenarios.
 
-Logging with Triggers
+---
 
-Security & Access Control (RBAC)
+## 🧱 1. Database Design
 
-## 1. Database Schema
-Database Name: OnlineRetailDB
+**Database Name**: `OnlineRetailDB`
 
-Tables:
-Customers: Customer details
+### 🔹 Core Tables
 
-Products: Product information
+| Table Name   | Description                                      |
+|--------------|--------------------------------------------------|
+| `Customers`  | Stores customer personal and contact information |
+| `Products`   | Holds product listings, prices, and stock data   |
+| `Categories` | Product categories like Electronics, etc.        |
+| `Orders`     | Customer orders (order header)                   |
+| `OrderItems` | Line-level order details (order body)            |
 
-Categories: Product categories
+---
 
-Orders: Customer orders
+## 📥 2. Sample Data Insertion
 
-OrderItems: Items per order
+Sample data is inserted for each table using realistic values. Includes:
 
-## 2. Sample Data Insertion
-Each table is populated with sample data:
+- Customers from both USA and India
+- Products across 3 categories: **Electronics**, **Clothing**, **Books**
+- Orders placed with multiple items
+- Products with `Stock = 0` for inventory queries
+- A customer who hasn't placed any orders
 
-Customers from multiple countries
+---
 
-A mix of electronic, apparel, and book products
+## 📊 3. Query Bank (40+ Queries)
 
-Multiple orders including multi-item orders
+### 🔎 Data Retrieval & Reporting
 
-Products with Stock = 0 for inventory queries
+- Retrieve orders by customer
+- Top-selling products by revenue
+- Average order value
+- Top customers by spend
+- Recent orders and customers
 
-## 3. Analytical Queries
-More than 40+ queries are implemented, covering:
+### 📈 Aggregation Queries
 
-🔍 Customer order history
+- Monthly sales trend
+- Revenue by category
+- Average price by category
 
-📊 Sales by product and category
+### 🔗 Joins & Subqueries
 
-💵 Average order value
+- Multi-table joins
+- Row ranking (`ROW_NUMBER()`, `RANK()`)
+- CTEs and subqueries
 
-🧑‍💼 Top customers
+Example:
+```sql
+SELECT P.ProductName, SUM(OI.Quantity * OI.Price) AS TotalSales
+FROM OrderItems OI
+JOIN Products P ON OI.ProductID = P.ProductID
+GROUP BY P.ProductName
+ORDER BY TotalSales DESC;
+```
 
-🛒 Out-of-stock and recent purchases
+---
 
-📈 Monthly sales trends
+## ⚡ 4. Performance Optimization – Indexing
 
-🚨 Customers with no orders
+Indexes are added to improve query performance:
 
-📦 Product performance
+- Products: `CategoryID`, `Price`
+- Orders: `CustomerID`, `OrderDate`
+- OrderItems: `ProductID`, `OrderID`
+- Customers: `Email`, `Country`
 
-🔁 Most frequent purchases
+---
 
-## 4. Performance Optimization (Indexes)
-Indexes are created to improve query performance:
+## 👁️ 5. Views
 
-✅ Clustered index on primary keys
+| View Name            | Description                               |
+|----------------------|-------------------------------------------|
+| `vw_ProductDetails`  | Products + Category names                 |
+| `vw_CustomerOrders`  | Total orders and spend per customer       |
+| `vw_RecentOrders`    | Orders in the last 30 days                |
+| `CustomerPublicView` | Basic customer info for restricted access |
 
-🔎 Non-clustered indexes on:
+---
 
-Products: CategoryID, Price
+## 🔐 6. Auditing with Triggers
 
-Orders: CustomerID, OrderDate
+Trigger-based logging using a `ChangeLog` table:
 
-OrderItems: ProductID, OrderID
+| Column     | Description              |
+|------------|--------------------------|
+| LogID      | Unique entry             |
+| TableName  | Affected table           |
+| Operation  | INSERT, UPDATE, DELETE   |
+| RecordID   | Primary key              |
+| ChangedBy  | User who made the change |
+| ChangeDate | Timestamp                |
 
-Customers: Email, Country
+Triggers implemented for `Products` and `Customers` (Insert/Update/Delete)
 
-## 5. Views
-Logical data abstraction for:
-vw_ProductDetails: Products with category names
+---
 
-vw_CustomerOrders: Total orders and spend per customer
+## 👮 7. Role-Based Access Control (RBAC)
 
-vw_RecentOrders: Orders in the last 30 days
+Roles created and granted permissions using `GRANT` / `REVOKE`.
 
-These simplify complex queries and secure sensitive columns.
+| Role Name            | Access Type                                   |
+|----------------------|-----------------------------------------------|
+| `ReadOnlyRole`       | SELECT on all tables                          |
+| `ProductManagerRole` | Full access to products and categories         |
+| `DataEntryClerk`     | INSERT on `Orders`, `OrderItems`             |
+| `CustomerSupportRole`| Read-only access to `Customers`, `Orders`     |
+| `SensitiveDataRole`  | Limited column access via views               |
 
-## 6. Logging with Triggers
-Triggers are created for Products and Customers tables to track:
+---
 
-INSERT
+## 💻 Tech Stack
 
-UPDATE
+- MySQL 8.0+
+- MySQL Workbench, CLI, or DBeaver
 
-DELETE
+---
 
-All actions are logged in a dedicated ChangeLog table with:
+## 📦 How to Use
 
-Table name
+1. Run table and data scripts
+2. Execute queries for insights
+3. Use `EXPLAIN` to monitor performance
+4. Simulate RBAC using users and roles
+5. Audit changes via `ChangeLog` table
 
-Operation type
+---
 
-Record ID
+## 🧠 Learning Outcomes
 
-User
+- Schema design & normalization
+- Real-world SQL query writing
+- Performance tuning via indexes
+- Trigger-based audit logs
+- RBAC and security enforcement
 
-Timestamp
-
-## 7. Security & Access Control (RBAC)
-Over 20 access scenarios implemented using:
-
-CREATE ROLE
-
-GRANT / REVOKE
-
-Custom views for column-level access
-
-Roles include:
-
-ReadOnlyRole, DataEntryClerk
-
-ProductManagerRole, FinanceManagerRole
-
-SalesAnalystRole, CustomerSupportRole
-
-SecurityAdminRole, DevRole
-
-Column-level permissions are simulated via views.
-
-## 🛠️ Requirements
-
-MySQL 8.0+
-
-User with CREATE, GRANT, TRIGGER privileges
-
-Any SQL client (e.g., MySQL Workbench, DBeaver, CLI)
-
-## 📂 How to Use
-Run all table and data creation scripts in order.
-
-Execute queries section by section as needed.
-
-View performance using EXPLAIN and monitor ChangeLog table.
-
-Assign roles and test user access via SHOW GRANTS.
+---
